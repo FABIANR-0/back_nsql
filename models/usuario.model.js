@@ -14,14 +14,13 @@ export const getUsuario = async (access) => {
     const usuarios = db.collection("usuario");  // Selecciona la colección `usuario`
 
     try {
-        console.log("pasaaaa")
+        
         // Busca el usuario por nombre y contraseña
         const usuario = await usuarios.findOne({
             username: access.username,
             password: access.password
         });
 
-        console.log("pasaaaa1")
         // Retorna el ID del usuario si lo encuentra
         if (usuario) {
             return [ usuario._id.toString()  ];
