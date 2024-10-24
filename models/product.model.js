@@ -99,9 +99,9 @@ export const getProductModel = async (userId) => {
         const productsList = await products.find({ id_user: new ObjectId(userId) }).toArray();
   
         if (productsList.length > 0) {
-            return { success: "Productos encontrados", status: 200, data: productsList };
+            return { success: "libros encontrados", status: 200, data: productsList };
         }
-        return { message: "Productos no encontrados", status: 404 };
+        return { message: "libros no encontrados", status: 404 };
     } catch (e) {
         return { error: "Error interno del servidor", status: 500 };
     }
@@ -112,9 +112,9 @@ export const deleteProductModel = async (productId) => {
         const product = await products.findOne({ _id: new ObjectId(productId) });
         if (product) {
             await products.deleteOne({ _id: new ObjectId(productId) });
-            return { success: "Producto eliminado exitosamente", status: 200, msg: "Delete product" };
+            return { success: "libro eliminado exitosamente", status: 200, msg: "Delete product" };
         }
-        return { message: "Producto no encontrado", status: 404 };
+        return { message: "libro no encontrado", status: 404 };
     } catch (e) {
         return { error: "Error interno del servidor", status: 500 };
     }
@@ -124,20 +124,20 @@ export const createProductModel = async (data) => {
     try {
         const productExists = await products.findOne({ name: data.name });
         if (productExists) {
-            return { error: "Ya existe un producto con ese nombre", status: 409, msg: "Product don't save" };
+            return { error: "Ya existe un libro con ese nombre", status: 409, msg: "Product don't save" };
         }
-        if (!data.name || !data.description || !data.price || !data.url_image || data.price <= 0 || !data.stock) {
-            return { error: "Todos los atributos del producto son obligatorios y el precio debe ser mayor a cero", status: 400, msg: "Product don't save" };
+        if (!data.name || !data.description || !data.price || !data.url_image  || !data.stock) {
+            return { error: "Todos los atributos del libro son obligatorios ", status: 400, msg: "Product don't save" };
         }
         await products.insertOne({
             name: data.name,
             description: data.description,
-            price: data.price,
+            autor: data.price,
             stock: data.stock,
             id_user:  new ObjectId(data.id_user),
             url_image: data.url_image
         });
-        return { success: "Producto guardado exitosamente", status: 201, msg: "Product save" };
+        return { success: "libro guardado exitosamente", status: 201, msg: "Product save" };
     } catch (e) {
         console.log(e);
         return { error: "Error interno del servidor", status: 500, msg: "Product don't save" };
@@ -149,24 +149,24 @@ export const updateProductModel = async (data, productId) => {
     try {
         const product = await products.findOne({ _id: new ObjectId(productId) });
         if (!product) {
-            return { success: "Producto no existente", status: 404, msg: "Product don't update" };
-        } else if (!data.name || !data.description || !data.price || !data.url_image || data.price <= 0 || !data.stock) {
-            return { error: "Todos los atributos del producto son obligatorios y el precio debe ser mayor a cero", status: 400, msg: "Product don't update" };
+            return { success: "libro no existente", status: 404, msg: "Product don't update" };
+        } else if (!data.name || !data.description || !data.price || !data.url_image || !data.stock) {
+            return { error: "Todos los atributos del libro son obligatorios", status: 400, msg: "Product don't update" };
         } else if (product.name === data.name) {
             await products.updateOne({ _id: new ObjectId(productId) }, {
                 $set: {
                     name: data.name,
                     description: data.description,
-                    price: data.price,
+                    autor: data.price,
                     stock: data.stock,
                     url_image: data.url_image
                 }
             });
-            return { success: "Producto actualizado exitosamente", status: 200 };
+            return { success: "libro actualizado exitosamente", status: 200 };
         } else {
             const productExists = await products.findOne({ name: data.name });
             if (productExists) {
-                return { error: "Ya existe un producto con ese nombre", status: 409, msg: "Product don't update" };
+                return { error: "Ya existe un libro con ese nombre", status: 409, msg: "Product don't update" };
             }
             await products.updateOne({ _id: new ObjectId(productId) }, {
                 $set: {
@@ -176,7 +176,7 @@ export const updateProductModel = async (data, productId) => {
                     stock: data.stock
                 }
             });
-            return { success: "Producto actualizado exitosamente", status: 200 };
+            return { success: "libro actualizado exitosamente", status: 200 };
         }
     } catch (e) {
         return { error: "Error interno del servidor", status: 500, msg: "Product don't update" };
@@ -187,9 +187,9 @@ export const getProductByIdModel = async (productId) => {
     try {
         const product = await products.findOne({ _id: new ObjectId(productId) });
         if (product) {
-            return { success: "Producto encontrado", status: 200, data: product };
+            return { success: "libro encontrado", status: 200, data: product };
         }
-        return { message: "Producto no encontrado", status: 404 };
+        return { message: "libro no encontrado", status: 404 };
     } catch (e) {
         return { error: "Error interno del servidor", status: 500 };
     }
